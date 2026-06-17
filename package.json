@@ -1,0 +1,28 @@
+{
+  "name": "notes-app-mern",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/aamita96/notes-app-mern#readme",
+  "bugs": {
+    "url": "https://github.com/aamita96/notes-app-mern/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aamita96/notes-app-mern.git"
+  },
+  "license": "ISC",
+  "author": "Amit Khatri",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
