@@ -16,7 +16,7 @@
 # Environment files (containing secrets, API keys, credentials)
 .env
 *.env
-.env.*
+# .env.*
 
 # Local configuration that shouldn't be shared
 *.local
@@ -49,6 +49,7 @@ coverage/
 
 # Dependencies
 node_modules/
+frontend/node_modules
 jspm_packages/
 bower_components/
 web_modules/
