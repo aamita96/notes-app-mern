@@ -3,10 +3,17 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Form from 'react-bootstrap/Form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 
 export default function Header() {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("userInfo");
+        navigate('/');
+    };
+
     return (
         <Navbar expand="md" bg="primary" variant="dark">
             <Container>
@@ -30,7 +37,7 @@ export default function Header() {
                         <NavDropdown title="Amit Khatri" id="basic-nav-dropdown">
                             <NavDropdown.Item as={Link} to="/myprofile">My Profile</NavDropdown.Item>
                             <NavDropdown.Divider />
-                            <NavDropdown.Item href="" className="text-danger">
+                            <NavDropdown.Item className="text-danger" onClick={handleLogout}>
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>
