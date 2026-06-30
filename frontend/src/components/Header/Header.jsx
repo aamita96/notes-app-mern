@@ -4,13 +4,18 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Form from 'react-bootstrap/Form';
 import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { logout } from '../../actions/user-actions';
 
 
 export default function Header() {
     const navigate = useNavigate();
-
+    const dispatch = useDispatch();
+    const userLogin = useSelector(state => state.userLogin);
+    const { userInfo } = userLogin;
+    
     const handleLogout = () => {
-        localStorage.removeItem("userInfo");
+        dispatch(logout());
         navigate('/');
     };
 

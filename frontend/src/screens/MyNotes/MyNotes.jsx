@@ -10,7 +10,7 @@ export default function MyNotes() {
 
     function deleteHandler(id) {
         if (window.confirm("Are you sure you want to delete?")) {
-            notes = notes.filter(note => Number(note._id) !== Number(id));
+            // notes = notes.filter(note => Number(note._id) !== Number(id));
         }
     }
 

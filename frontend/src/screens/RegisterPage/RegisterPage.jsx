@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MainScreen from "../../components/MainScreen/MainScreen";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import Loading from "../../components/Loading/Loading";
 import Error from "../../components/Error/Error";
 import { Button, Form } from "react-bootstrap";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../actions/user-actions";
 
 export default function RegisterPage() {
     const [name, setName] = useState("");
@@ -12,50 +13,32 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [profilePic, setProfilePic] = useState("https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/default-profile-picture-grey-male-icon.svg");
+    const [message, setMessage] = useState(null);
 
-    const [error, setError] = useState(false);
-    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const userRegister = useSelector(state => state.userRegister);
+    const { loading, error, userInfo } = userRegister;
+
+    useEffect(() => {
+        if (userInfo) {
+            navigate('/mynotes');
+        }
+    }, [userInfo]);
 
     const submitHandler = async (e) => {
         e.preventDefault();
-        setLoading(true);
-        setError(false);
+        setMessage(null);
 
         if (password !== confirmPassword) {
-            setError("Password and confirm password doesn't match!");
-            setLoading(false);
+            setMessage("Password and confirm password doesn't match!");
         } else {
-            try {
-                const config = {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                };
-
-                const userData = {
-                    name,
-                    email,
-                    password,
-                    pic: profilePic
-                };
-
-                const { data } = await axios.post("/api/users/register", userData, config);
-                localStorage.setItem("userInfo", JSON.stringify(data));
-                setLoading(false);
-
-                navigate('/mynotes');
-
-            } catch (error) {
-                setLoading(false);
-                setError(error.response.data.message);
-            }
+            dispatch(register(name, email, password, profilePic));
         }
-
     };
 
     const uploadImage = (pics) => {
-        setError(false);
+        // setMessage(false);
 
         console.log(pics);
         if (pics.type === "image/png" || pics.type === "image/jpg" || pics.type === "image/jpeg") {
@@ -63,7 +46,7 @@ export default function RegisterPage() {
             data.append("file", pics);
             console.log('formData' + data);
         } else {
-            setError("Please select an Image");
+            // setMessage("Please select an Image");
         }
     }
 
@@ -71,6 +54,7 @@ export default function RegisterPage() {
         <MainScreen title="Register">
             {loading && <Loading />}
             {error && <Error variant="danger">{error}</Error>}
+            {message && <Error variant="danger">{message}</Error>}
 
             <Form onSubmit={submitHandler}>
                 <Form.Group className="mb-3" controlId="formBasicName">
