@@ -8,12 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../actions/user-actions';
 
 
-export default function Header() {
+export default function Header({ setSearch }) {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin;
-    
+
     const handleLogout = () => {
         dispatch(logout());
         navigate('/');
@@ -33,6 +33,7 @@ export default function Header() {
                                 type="text"
                                 placeholder="Search"
                                 className="mr-sm-2"
+                                onChange={(e) => setSearch(e.target.value)}
                             />
                         </Form>
                     </Nav>
