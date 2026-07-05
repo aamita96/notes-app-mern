@@ -1,11 +1,13 @@
 import { Button, Card, Badge, Accordion, useAccordionButton } from "react-bootstrap";
-import MainScreen from "../../components/MainScreen/MainScreen";
-import { deleteNoteAction, listNoteAction } from "../../actions/notes-actions";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../../components/Loading/Loading";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
+
+import { deleteNoteAction, listNoteAction } from "../../actions/notes-actions";
+import MainScreen from "../../components/MainScreen/MainScreen";
+import Loading from "../../components/Loading/Loading";
+import Error from "../../components/Error/Error";
 import './MyNotes.css';
 
 export default function MyNotes({ search }) {
@@ -26,6 +28,16 @@ export default function MyNotes({ search }) {
     const { loading, error, notes } = notesList;
     const { userInfo } = userLogin;
 
+    useEffect(() => {
+        // CHECK AUTHENTICATION FIRST
+        if (!userInfo) {
+            navigate('/login');
+        }
+
+        dispatch(listNoteAction());
+
+    }, [dispatch, createSuccess, userInfo, updateSuccess, deleteSuccess]);
+
     function deleteHandler(id) {
         if (window.confirm("Are you sure you want to delete?")) {
             dispatch(deleteNoteAction(id));
@@ -42,16 +54,7 @@ export default function MyNotes({ search }) {
         )
     }
 
-    useEffect(() => {
-        dispatch(listNoteAction());
-
-        if (!userInfo) {
-            navigate('/login');
-        }
-
-    }, [dispatch, createSuccess, userInfo, updateSuccess, deleteSuccess]);
-
-    if (loading || deleteLoading) {
+    if (loading || deleteLoading || !userInfo) {
         return <Loading />
     }
 
@@ -62,32 +65,36 @@ export default function MyNotes({ search }) {
             {/* {loading && <Loading />} */}
             {error && <Error variant="danger">{error}</Error>}
             {deleteError && <Error variant="danger">{deleteError}</Error>}
-            {notes && notes.filter(note => note.title.toLowerCase().includes(search.toLowerCase()) || note.category.toLowerCase().includes(search.toLowerCase()) || note.content.toLowerCase().includes(search.toLowerCase())).map(note => (
-                <Accordion defaultActiveKey="0" key={note._id}>
-                    <Card className="m-2">
-                        <Card.Header className="d-flex">
-                            <CustomToggle eventKey="0">{note.title}</CustomToggle>
-                            <div>
-                                <Button variant="primary" as={Link} to={`/note/${note._id}`}>Edit</Button>
-                                <Button variant="danger" className="mx-2" onClick={() => deleteHandler(note._id)}>Delete</Button>
-                            </div>
-                        </Card.Header>
-                        <Accordion.Collapse eventKey="0">
-                            <Card.Body>
-                                <h4>
-                                    <Badge bg="success">Category - {note.category}</Badge>
-                                </h4>
-                                <blockquote className="blockquote mb-0">
-                                    <ReactMarkdown>{note.content}</ReactMarkdown>
-                                    <footer className="blockquote-footer">
-                                        Created On <cite title="Source Title">{new Date(note.createdAt).toDateString()}</cite>
-                                    </footer>
-                                </blockquote>
-                            </Card.Body>
-                        </Accordion.Collapse>
-                    </Card>
-                </Accordion>
-            ))}
+            {notes && notes.filter(note =>
+                note.title.toLowerCase().includes(search.toLowerCase())
+                || note.category.toLowerCase().includes(search.toLowerCase())
+                || note.content.toLowerCase().includes(search.toLowerCase()))
+                .map(note => (
+                    <Accordion defaultActiveKey="0" key={note._id}>
+                        <Card className="m-2">
+                            <Card.Header className="d-flex">
+                                <CustomToggle eventKey="0">{note.title}</CustomToggle>
+                                <div>
+                                    <Button variant="primary" as={Link} to={`/note/${note._id}`}>Edit</Button>
+                                    <Button variant="danger" className="mx-2" onClick={() => deleteHandler(note._id)}>Delete</Button>
+                                </div>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="0">
+                                <Card.Body>
+                                    <h4>
+                                        <Badge bg="success">Category - {note.category}</Badge>
+                                    </h4>
+                                    <blockquote className="blockquote mb-0">
+                                        <ReactMarkdown>{note.content}</ReactMarkdown>
+                                        <footer className="blockquote-footer">
+                                            Created On <cite title="Source Title">{new Date(note.createdAt).toDateString()}</cite>
+                                        </footer>
+                                    </blockquote>
+                                </Card.Body>
+                            </Accordion.Collapse>
+                        </Card>
+                    </Accordion>
+                ))}
         </MainScreen>
     );
 }

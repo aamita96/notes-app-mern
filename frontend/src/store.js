@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { userLoginReducer, userRegisterReducer } from './reducers/user-reducers';
+import { userLoginReducer, userRegisterReducer, userUpdateReducer } from './reducers/user-reducers';
 import { notesCreateReducer, notesDeleteReducer, notesListReducer, notesUpdateReducer } from './reducers/note-reducers';
 
 const userInfo = localStorage.getItem("userInfo");
@@ -13,8 +13,11 @@ const preloadedState = {
 
 const store = configureStore({
     reducer: {
+        // User Reducers
         userLogin: userLoginReducer,
         userRegister: userRegisterReducer,
+        userUpdate: userUpdateReducer,
+        // Notes Reducers
         notesList: notesListReducer,
         noteCreate: notesCreateReducer,
         noteUpdate: notesUpdateReducer,

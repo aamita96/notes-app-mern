@@ -37,17 +37,17 @@ export default function Header({ setSearch }) {
                             />
                         </Form>
                     </Nav>
-                    <Nav>
+                    {userInfo ? <Nav>
                         <Nav.Link as={Link} to="/mynotes">My Notes</Nav.Link>
                         {/* <Nav.Link href="#link">Link</Nav.Link> */}
-                        <NavDropdown title="Amit Khatri" id="basic-nav-dropdown">
+                        <NavDropdown title={userInfo?.user?.name} id="basic-nav-dropdown">
                             <NavDropdown.Item as={Link} to="/myprofile">My Profile</NavDropdown.Item>
                             <NavDropdown.Divider />
                             <NavDropdown.Item className="text-danger" onClick={handleLogout}>
                                 Logout
                             </NavDropdown.Item>
                         </NavDropdown>
-                    </Nav>
+                    </Nav> : <Nav.Link as={Link} to="/login">Login</Nav.Link>}
                 </Navbar.Collapse>
             </Container>
         </Navbar>

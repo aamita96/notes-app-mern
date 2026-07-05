@@ -10,6 +10,7 @@ import { lazy, Suspense, useState } from 'react';
 
 function App() {
 
+  const ProfileScreen = lazy(() => import('./screens/ProfileScreen/ProfileScreen'));
   const RegisterPage = lazy(() => import('./screens/RegisterPage/RegisterPage'));
   const LandingPage = lazy(() => import('./screens/LandingPage/LandingPage'));
   const CreateNote = lazy(() => import('./screens/CreateNote/CreateNote'));
@@ -31,6 +32,7 @@ function App() {
             <Route path="/mynotes" element={<MyNotes search={search} />} />
             <Route path="/createnote" element={<CreateNote />} />
             <Route path="/note/:id" element={<SingleNote />} />
+            <Route path="/myprofile" element={<ProfileScreen />} />
           </Routes>
         </Suspense>
       </main>

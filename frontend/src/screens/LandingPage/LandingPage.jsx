@@ -9,11 +9,11 @@ import { useEffect } from "react";
 export default function LandingPage() {
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     const userInfo = localStorage.getItem("userInfo");
+    useEffect(() => {
+        const userInfo = localStorage.getItem("userInfo");
 
-    //     if (userInfo) navigate('/mynotes');
-    // }, [])
+        if (userInfo) navigate('/mynotes');
+    }, [])
 
     return (
         <div className="main">

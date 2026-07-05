@@ -7,8 +7,7 @@ const UserSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        trim: true,
-        lowercase: true
+        trim: true
     },
     email: {
         type: String,
@@ -37,15 +36,15 @@ const UserSchema = new mongoose.Schema({
     }
 );
 
-UserSchema.pre('save', async function (next,) {
+UserSchema.pre("save", async function () {
     const user = this;
 
-    if (!user.isModified('password')) {
-        next();
+    if (!user.isModified("password")) {
+        return;
     }
 
     const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(this.password, salt);
+    user.password = await bcrypt.hash(user.password, salt);
 });
 
 UserSchema.methods.toJSON = function () {

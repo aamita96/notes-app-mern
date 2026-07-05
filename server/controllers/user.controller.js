@@ -48,3 +48,39 @@ export const authUser = async (req, res) => {
         throw new Error(error.message);
     }
 }
+
+export const updateUserProfile = async (req, res, next) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            const err = new Error("User not found!");
+            err.status = 404;
+            throw err;
+        }
+
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+        user.pic = req.body.pic || user.pic;
+
+        if (req.body.password) {
+            user.password = req.body.password;
+        }
+
+        const updatedUser = await user.save();
+        const token = await updatedUser.generateAuthToken();
+
+        res.json({
+            user: {
+                _id: updatedUser._id,
+                name: updatedUser.name,
+                email: updatedUser.email,
+                pic: updatedUser.pic,
+                isAdmin: updatedUser.isAdmin,
+            },
+            token
+        });
+    } catch (error) {
+        next(error);
+    }
+}
