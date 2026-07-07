@@ -46,7 +46,7 @@ export const createNoteAction = (title, category, content) => async (dispatch, g
     } catch (error) {
         dispatch({
             type: NOTES_CREATE_FAIL,
-            error: error.response && error.response.data.message ? error.response.data.message : error.message
+            error: error.response && error.response.data ? error.response.data : error.message
         })
     }
 }
@@ -68,7 +68,7 @@ export const updateNoteAction = (id, title, category, content) => async (dispatc
     } catch (error) {
         dispatch({
             type: NOTES_UPDATE_FAIL,
-            error: error.response && error.response.data.message ? error.response.data.message : error.message
+            error: error.response && error.response.data ? error.response.data : error.message
         })
     }
 }
@@ -93,7 +93,7 @@ export const deleteNoteAction = (id) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: NOTES_DELETE_FAIL,
-            error: error.response && error.response.data.message ? error.response.data.message : error.message
+            error: error.response && error.response.data ? error.response.data : error.message
         });
     }
 }

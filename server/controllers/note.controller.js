@@ -22,21 +22,16 @@ export const getNoteById = async (req, res, next) => {
 export const createNote = async (req, res, next) => {
     const { title, category, content } = req.body;
 
-    if (!title || !category || !content) {
-        res.status(400);
-        throw new Error("Please fill all the required fields");
-    } else {
-        const note = new Note({
-            title,
-            category,
-            content,
-            user: req.user._id
-        });
+    const note = new Note({
+        title,
+        category,
+        content,
+        user: req.user._id
+    });
 
-        const createdNote = await note.save();
+    const createdNote = await note.save();
 
-        res.status(201).send(createdNote);
-    }
+    res.status(201).send(createdNote);
 }
 
 export const updateNote = async (req, res, next) => {

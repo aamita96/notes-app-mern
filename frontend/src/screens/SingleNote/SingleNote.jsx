@@ -19,13 +19,22 @@ export default function SingleNote() {
 
     const { id } = useParams();
 
+    const userLogin = useSelector(state => state.userLogin);
     const noteUpdate = useSelector(state => state.noteUpdate);
+
+    const { userInfo } = userLogin;
     const { loading, error } = noteUpdate;
 
     useEffect(() => {
-        
+
         const fetching = async () => {
-            const { data } = await axios.get(`/api/notes/${id}`);
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${userInfo.token}`
+                }
+            };
+
+            const { data } = await axios.get(`/api/notes/${id}`, config);
 
             setTitle(data.title);
             setCategory(data.category);
@@ -91,7 +100,7 @@ export default function SingleNote() {
                         </Form.Group>
                         <Form.Group className="mb-3 d-flex gap-3">
                             <Button variant="primary" type="submit" disabled={loading}>
-                                Update Note {loading && <Loading size={20}/>}
+                                Update Note {loading && <Loading size={20} />}
                             </Button>
                             <Button variant="danger" type="reset" onClick={resetHandler}>
                                 Reset Fields

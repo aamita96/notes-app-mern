@@ -25,7 +25,7 @@ export const login = (email, password) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: USER_LOGIN_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+            payload: error?.response?.data || error.message
         });
     }
 }
@@ -61,7 +61,7 @@ export const register = (name, email, password, pic) => async (dispatch) => {
     } catch (error) {
         dispatch({
             type: USER_REGISTER_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+            payload: error.response && error.response.data ? error.response.data : error.message
         });
 
     }
@@ -95,7 +95,7 @@ export const updateProfile = (user) => async (dispatch, getState) => {
     } catch (error) {
         dispatch({
             type: USER_UPDATE_FAIL,
-            payload: error.response && error.response.data.message ? error.response.data.message : error.message
+            payload: error.response && error.response.data ? error.response.data : error.message
         });
     }
 }
