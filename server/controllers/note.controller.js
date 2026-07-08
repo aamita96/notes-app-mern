@@ -2,14 +2,18 @@ import Note from "../models/notesmodel.js"
 
 
 export const getNotes = async (req, res, next) => {
-    const notes = await Note.find({ user: req.user._id });
+    const notes = await Note.find({ user: req.user._id })
+        .sort({ createdAt: -1 });
 
     res.json(notes);
 }
 
 export const getNoteById = async (req, res, next) => {
 
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findOne({
+        _id: req.params.id,
+        user: req.user._id
+    });
 
     if (!note) {
         res.status(404)
@@ -37,16 +41,14 @@ export const createNote = async (req, res, next) => {
 export const updateNote = async (req, res, next) => {
     const { title, category, content } = req.body;
 
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findOne({
+        _id: req.params.id,
+        user: req.user._id
+    });
 
     if (!note) {
         res.status(404);
         throw new Error("Note not found!");
-    }
-
-    if (note.user.toString() !== req.user._id.toString()) {
-        res.status(401);
-        throw new Error("You can't perform this action!");
     }
 
     note.title = title;
@@ -59,16 +61,14 @@ export const updateNote = async (req, res, next) => {
 }
 
 export const deleteNote = async (req, res, next) => {
-    const note = await Note.findById(req.params.id);
+    const note = await Note.findOne({
+        _id: req.params.id,
+        user: req.user._id
+    });
 
     if (!note) {
         res.status(404);
         throw new Error('No record found!');
-    }
-
-    if (note.user.toString() !== req.user._id.toString()) {
-        res.status(401);
-        throw new Error("You can't perform this action!");
     }
 
     await note.deleteOne();
