@@ -11,7 +11,7 @@ router.get('/:id', auth, validate(noteIdSchema, "params"), getNoteById);
 
 router.post('/create', auth, validate(createNoteSchema), createNote);
 
-router.put('/:id', auth, validate(updateNoteSchema), updateNote);
+router.put('/:id', auth, validate(noteIdSchema, "params"), validate(updateNoteSchema), updateNote);
 
 router.delete('/:id', auth, validate(noteIdSchema, "params"), deleteNote);
 

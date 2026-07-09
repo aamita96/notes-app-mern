@@ -11,12 +11,22 @@ export const registerUser = async (req, res, next) => {
         throw err;
     }
 
-    const user = await User.create({
-        name,
-        email,
-        password,
-        pic
-    });
+    let user;
+    try {
+        user = await User.create({
+            name,
+            email,
+            password,
+            pic
+        });
+    } catch (error) {
+        if (error.code === 11000) {
+            const err = new Error("Email already in use");
+            err.status = 409;
+            throw err;
+        }
+        throw error;
+    }
 
     const token = await user.generateAuthToken();
 
@@ -32,8 +42,9 @@ export const registerUser = async (req, res, next) => {
             token
         });
     } else {
-        res.status(500);
-        throw new Error("Something wen't wrong while registering user!");
+        const err = new Error("Something wen't wrong while registering user!");
+        err.status = 500;
+        throw err;
     }
 }
 
@@ -44,8 +55,9 @@ export const authUser = async (req, res) => {
 
         res.send({ user, token });
     } catch (error) {
-        res.status(400);
-        throw new Error(error.message);
+        const err = new Error(error.message);
+        err.status = 400;
+        throw err;
     }
 }
 
@@ -81,6 +93,11 @@ export const updateUserProfile = async (req, res, next) => {
             token
         });
     } catch (error) {
+        if (error.code === 11000) {
+            error = new Error("Email already in use");
+            error.status = 409;
+        }
+
         next(error);
     }
 }

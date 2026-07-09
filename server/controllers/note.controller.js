@@ -16,8 +16,9 @@ export const getNoteById = async (req, res, next) => {
     });
 
     if (!note) {
-        res.status(404)
-        throw new Error("Note not found!");
+        const err = new Error("Note not found!");
+        err.status = 404;
+        throw err;
     }
 
     res.json(note);
@@ -47,8 +48,9 @@ export const updateNote = async (req, res, next) => {
     });
 
     if (!note) {
-        res.status(404);
-        throw new Error("Note not found!");
+        const err = new Error("Note not found!");
+        err.status = 404;
+        throw err;
     }
 
     note.title = title;
@@ -67,8 +69,9 @@ export const deleteNote = async (req, res, next) => {
     });
 
     if (!note) {
-        res.status(404);
-        throw new Error('No record found!');
+        const err = new Error('No record found!');
+        err.status = 404;
+        throw err;
     }
 
     await note.deleteOne();
